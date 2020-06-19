@@ -38,7 +38,7 @@ class StoreOpenDayRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'message' => 'Opss! something is wrong with request body.',
             'errors' => $validator->errors()
-        ], 403));
+        ], 400));
     }
 
 
