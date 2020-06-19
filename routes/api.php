@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('cashier/balance', 'CashRegisterController@getOpenDay')->name('cashRegister.getOpenDay');
-Route::post('cashier/balance/open/day', 'CashRegisterController@storeOpenDay')->name('cashRegister.storeOpenDay');
-Route::post('cashier/balance/close/day', 'CashRegisterController@storeCloseCash')->name('cashRegister.storeCloseDay');
-Route::get('has/open/cashier/balance', 'CashRegisterController@getCloseCash')->name('cashRegister.getCloseDay');
+Route::get('cashier/balance', 'CashRegisterController@getOpenCashRegister')->name('cashRegister.getOpenCashRegister');
+Route::post('cashier/balance/open/day', 'CashRegisterController@storeOpenCashRegister')->name('cashRegister.storeOpenCashRegister');
+Route::post('cashier/balance/close/day', 'CashRegisterController@storeCloseCashRegister')->name('cashRegister.storeCloseCashRegister');
+Route::get('has/open/cashier/balance', 'CashRegisterController@getCloseCashRegister')->name('cashRegister.getCloseCashRegister');

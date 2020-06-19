@@ -4,15 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\CashRegister;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCloseDayRequest;
 use App\Http\Requests\StoreOpenDayRequest;
-use Dotenv\Validator;
-use Illuminate\Http\Request;
 
 
 class CashRegisterController extends Controller
 {
     public function generateOpenResponse($resource = null, $status = 200, $message = 'Success') {
-        if($resource == null) {
+        if($resource == null || $resource->closing_date != null) {
             return response()->json([
                 'message' => $message,
                 'data' => [
@@ -39,18 +38,44 @@ class CashRegisterController extends Controller
         ], $status);
     }
 
-    public function getOpenDay()
+    public function getOpenCashRegister()
     {
         $lastRegister = CashRegister::latest()->first();
         return $this->generateOpenResponse($lastRegister);
     }
 
 
-    public function storeOpenDay(StoreOpenDayRequest $request)
+    public function storeOpenCashRegister(StoreOpenDayRequest $request)
     {
         $openCash = CashRegister::create($request->all());
         $openCash->save();
          return $this->generateOpenResponse($openCash, 201, 'CashRegister was open with success');
+    }
+
+    public function storeCloseCashRegister(StoreCloseDayRequest $request)
+    {
+        $lastRegister = CashRegister::latest()->first();
+        $lastRegister->update($request->all());
+        $lastRegister->save();
+
+        return response()->json([
+            'message' => 'Cash register was closed with success',
+            'data' => []
+        ]);
+    }
+
+    public function getCloseCashRegister()
+    {
+        $lastRegister = CashRegister::latest()->first();
+        return response()->json([
+            'message' => 'Success!',
+            'data' => [
+                'type' => 'cash_register',
+                'closing_value'=> $lastRegister->closing_value,
+                'card_value' => $lastRegister->card_value,
+                'value' => $lastRegister->closing_value - $lastRegister->card_value
+            ]
+        ]);
     }
 
 }
