@@ -59,8 +59,18 @@ class CashRegisterController extends Controller
     public function storeCloseCashRegister(StoreCloseDayRequest $request)
     {
         $lastRegister = CashRegister::latest()->first();
+
+        if($lastRegister->closing_date != null) {
+            return $this->generateCustomResponse('Cash register already closed.');
+        }
+
+
         $lastRegister->update($request->all());
         $lastRegister->save();
+
+        if($request->has('expenses')) {
+            $lastRegister->expenses()->createMany($request->input('expenses'));
+        }
 
         return $this->generateCustomResponse('Cash register was closed with success');
     }
